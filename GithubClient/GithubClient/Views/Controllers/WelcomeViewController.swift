@@ -30,10 +30,9 @@ class WelcomeViewController: UIViewController {
     private func setup(){
         view.addSubview(welcomeView)
         welcomeView.didTapStart = { [weak self] in
-            self?.router.pushSearchViewController()
+            self?.router.setRootTabBar()
         }
     }
-
     
     private func layout(){
         welcomeView.pinToEdges(of: view)

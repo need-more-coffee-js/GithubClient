@@ -1,5 +1,5 @@
 //
-//  PopularUserCell.swift
+//  FavoriteUserCell.swift
 //  GithubClient
 //
 //  Created by Денис Ефименков on 03.09.2025.
@@ -7,13 +7,13 @@
 
 import UIKit
 
-final class PopularUserCell: UICollectionViewCell {
+final class FavoriteUserCell: UITableViewCell {
     
-    static let identifier = "PopularUserCell"
+    static let identifier = "FavoriteUserCell"
     
     private let avatarImageView: UIImageView = {
         let iv = UIImageView()
-        iv.layer.cornerRadius = 35
+        iv.layer.cornerRadius = 20
         iv.clipsToBounds = true
         iv.contentMode = .scaleAspectFill
         iv.translatesAutoresizingMaskIntoConstraints = false
@@ -23,33 +23,25 @@ final class PopularUserCell: UICollectionViewCell {
     
     private let usernameLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textAlignment = .center
-        lbl.font = .systemFont(ofSize: 14, weight: .medium)
+        lbl.font = .systemFont(ofSize: 16, weight: .medium)
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(avatarImageView)
         contentView.addSubview(usernameLabel)
-        contentView.layer.cornerRadius = 12
-        contentView.backgroundColor = .systemBackground
-        contentView.layer.shadowColor = UIColor.black.cgColor
-        contentView.layer.shadowOpacity = 0.1
-        contentView.layer.shadowRadius = 4
-        contentView.layer.shadowOffset = CGSize(width: 0, height: 2)
         
         NSLayoutConstraint.activate([
-            avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            avatarImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            avatarImageView.widthAnchor.constraint(equalToConstant: 70),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 70),
+            avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            avatarImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 40),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 40),
             
-            usernameLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 8),
-            usernameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
-            usernameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
-            usernameLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
+            usernameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 12),
+            usernameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            usernameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
     }
     
