@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class Router{
+final class Router {
     let navigationController: UINavigationController
     
     init(navigationController: UINavigationController) {
@@ -18,12 +18,14 @@ final class Router{
         navigationController.pushViewController(controller, animated: true)
     }
     
-    private func pop(){
-        navigationController.popViewController(animated: true)
+    func pushSearchViewController() {
+        let searchVC = SearchViewController(router: self)
+        push(controller: searchVC)
     }
     
-    func pushMainViewController(){
-        let mainVC = MainViewController(router: self)
+    func pushMainViewController(username: String) {
+        let mainVC = MainViewController(router: self, username: username)
         push(controller: mainVC)
     }
 }
+

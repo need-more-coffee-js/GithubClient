@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import SafariServices
 
-class MainViewController: UIViewController, UITableViewDataSource {
+class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     private let mainView = MainView()
     private let viewModel: MainViewModel
@@ -15,7 +16,7 @@ class MainViewController: UIViewController, UITableViewDataSource {
     
     private var repositories: [Repository] = []
     
-    init(router: Router, username: String = "need-more-coffee-js") {
+    init(router: Router, username: String) {
         self.router = router
         self.viewModel = MainViewModel(username: username)
         super.init(nibName: nil, bundle: nil)
@@ -30,13 +31,10 @@ class MainViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView.tableView.dataSource = self
+        mainView.tableView.delegate = self
         bindViewModel()
         viewModel.loadData()
-        setupNavigationController()
-    }
-    
-    private func setupNavigationController(){
-        navigationItem.hidesBackButton = true
+        view.backgroundColor = .white
     }
     
     private func bindViewModel() {
@@ -78,5 +76,14 @@ class MainViewController: UIViewController, UITableViewDataSource {
         config.secondaryText = repo.description
         cell.contentConfiguration = config
         return cell
+    }
+    
+    // ✅ открытие в Safari
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let repo = repositories[indexPath.row]
+        if let url = URL(string: repo.htmlUrl) {
+            let safariVC = SFSafariViewController(url: url)
+            present(safariVC, animated: true)
+        }
     }
 }
