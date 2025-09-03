@@ -32,10 +32,27 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewDidLoad()
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
+        setupFavoriteButton()
         bindViewModel()
         viewModel.loadData()
         view.backgroundColor = .white
     }
+    
+    private func setupFavoriteButton() {
+        let isFav = FavoritesManager.shared.isFavorite(username: viewModel.username)
+        let imageName = isFav ? "star.fill" : "star"
+        let button = UIBarButtonItem(image: UIImage(systemName: imageName),
+                                     style: .plain,
+                                     target: self,
+                                     action: #selector(didTapFavorite))
+        navigationItem.rightBarButtonItem = button
+    }
+
+    @objc private func didTapFavorite() {
+        FavoritesManager.shared.toggle(username: viewModel.username)
+        setupFavoriteButton() 
+    }
+
     
     private func bindViewModel() {
         viewModel.onUserLoaded = { [weak self] user in
@@ -78,7 +95,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return cell
     }
     
-    // ✅ открытие в Safari
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let repo = repositories[indexPath.row]
         if let url = URL(string: repo.htmlUrl) {

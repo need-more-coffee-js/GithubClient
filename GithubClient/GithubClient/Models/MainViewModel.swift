@@ -8,8 +8,8 @@
 import Foundation
 
 final class MainViewModel {
-    private let service = GitHubService()
-    private let username: String
+    let service = GitHubService()
+    let username: String
     
     var onUserLoaded: ((User) -> Void)?
     var onReposLoaded: (([Repository]) -> Void)?

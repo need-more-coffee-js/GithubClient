@@ -9,6 +9,13 @@ import UIKit
 
 class SearchViewController: UIViewController {
     
+    private let defaultUsers = ["apple", "microsoft", "google", "facebook", "twitter", "amazon"]
+
+    private var allUsers: [String] {
+        FavoritesManager.shared.favorites + defaultUsers
+    }
+
+    
     private let searchBar: UISearchBar = {
         let sb = UISearchBar()
         sb.placeholder = "Enter GitHub username"
@@ -19,10 +26,8 @@ class SearchViewController: UIViewController {
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: 100, height: 130)
         layout.minimumLineSpacing = 16
         layout.minimumInteritemSpacing = 16
-        
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.backgroundColor = .systemBackground
@@ -32,7 +37,7 @@ class SearchViewController: UIViewController {
 
     
     var router: Router
-    private let popularUsers = ["apple", "microsoft", "google", "facebook", "twitter", "amazon"]
+    private let popularUsers = ["apple", "microsoft", "google", "facebook", "twitter", "amazon","apple"]
     
     init(router: Router) {
         self.router = router
@@ -45,6 +50,12 @@ class SearchViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setup()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collectionView.reloadData()
+    }
+
     
     private func setup() {
         view.addSubview(searchBar)
@@ -77,22 +88,33 @@ extension SearchViewController: UISearchBarDelegate {
 
 extension SearchViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        popularUsers.count
+        allUsers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PopularUserCell.identifier, for: indexPath) as? PopularUserCell else {
             return UICollectionViewCell()
         }
-        let username = popularUsers[indexPath.row]
+        let username = allUsers[indexPath.row]
         cell.configure(username: username)
         return cell
     }
 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let username = popularUsers[indexPath.row]
+        let username = allUsers[indexPath.row]
         router.pushMainViewController(username: username)
     }
 }
 
+extension SearchViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let columns: CGFloat = 3
+        let spacing: CGFloat = 10
+        let totalSpacing = (columns - 1) * spacing
+        let width = (collectionView.bounds.width - totalSpacing) / columns
+        return CGSize(width: width, height: 130)
+    }
+}
